@@ -1,0 +1,29 @@
+:root { color-scheme: light dark; }
+body { font: 14px/1.5 system-ui, sans-serif; margin: 18px; max-width: 1100px; }
+h2 { margin: .25rem 0 0.5rem; }
+.muted { color:#666; font-size:12px; margin:.25rem 0 1rem; }
+
+#layout { display:grid; grid-template-columns: 340px 1fr; gap:12px; }
+
+.panel { border:1px solid #3333; border-radius:12px; padding:12px; }
+.panel-title { font-weight:600; margin-bottom:8px; }
+.panel-body { margin-top:10px; }
+
+.row { display:flex; align-items:center; }
+.gap { gap:8px; }
+
+#chat { border:1px solid #3333; border-radius:12px; padding:12px; min-height: 260px; margin-bottom:8px; }
+.bubble { max-width: 80%; padding:8px 10px; border-radius:10px; white-space:pre-wrap; margin:8px 0; }
+.me { text-align:right; }
+.me .bubble { background:#4a90e2; color:#fff; display:inline-block; border-bottom-right-radius:4px; }
+.bot .bubble { background:#111; color:#eee; display:inline-block; border-bottom-left-radius:4px; }
+
+#composer { display:flex; gap:8px; }
+#prompt { flex:1; padding:10px; border-radius:8px; border:1px solid #3333; }
+button { padding:.55rem .8rem; border-radius:8px; border:1px solid #3333; cursor:pointer; }
+button:disabled { opacity:.5; cursor:not-allowed; }
+
+select, input { padding:.45rem .5rem; border-radius:8px; border:1px solid #3333; }
+.lbl { font-size:12px; opacity:.8; }
+
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; white-space:pre-wrap; }

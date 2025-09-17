@@ -1,0 +1,22 @@
+# requirements.txt (patched)
+fastapi==0.115.1
+uvicorn[standard]==0.34.0
+
+openai==1.96.1
+openai-agents==0.2.3
+
+trino==0.327.0
+
+mcp==1.12.1
+httpx==0.28.1
+httpx-sse==0.4.0  # if this complains, use 0.4.0.post1
+
+numpy>=1.26,<3    # <-- key change (or pin: numpy==2.1.3)
+python-dotenv>=1.0
+requests==2.31.0
+anyio==4.9.0
+pydantic==2.11.5
+tqdm==4.67.1
+
+marshmallow==3.26.1
+marshmallow-sqlalchemy>=1.4.2

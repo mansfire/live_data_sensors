@@ -1,0 +1,5 @@
+apiVersion: v2
+name: esai-sovereign-ai-life-data-agent
+description: A Helm chart for Sovereign AI Live Data Agent on the Cube
+type: application
+version: 0.0.1

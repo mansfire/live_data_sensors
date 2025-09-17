@@ -1,0 +1,45 @@
+<!doctype html>
+<meta charset="utf-8"/>
+<title>Live Data Agent</title>
+<link rel="stylesheet" href="/static/styles.css"/>
+
+<h2>Live Data Agent</h2>
+<div class="muted" id="cfg">Connected to local LLM + Trino</div>
+
+<div id="layout">
+  <aside id="left">
+    <div class="panel">
+      <div class="panel-title">Sensors</div>
+      <div class="row gap">
+        <button id="btn-list">List sensors</button>
+        <select id="sensor"></select>
+      </div>
+
+      <div class="row gap">
+        <label class="lbl">Window</label>
+        <select id="window">
+          <option value="1h">1h</option>
+          <option value="6h">6h</option>
+          <option value="24h" selected>24h</option>
+          <option value="7d">7d</option>
+        </select>
+        <button id="btn-query">Get readings</button>
+      </div>
+
+      <div id="sensor-out" class="panel-body mono"></div>
+    </div>
+  </aside>
+
+  <main id="right">
+    <div class="panel">
+      <div class="panel-title">Chat</div>
+      <div id="chat"></div>
+      <div id="composer">
+        <input id="prompt" placeholder="Type your question…" />
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/static/app.js"></script>

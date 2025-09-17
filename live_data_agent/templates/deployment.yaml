@@ -1,0 +1,116 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: live-data-agent
+  namespace: esai-sovereign-ai
+  labels:
+    app: live-data-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: live-data-agent
+  template:
+    metadata:
+      labels:
+        app: live-data-agent
+    spec:
+      containers:
+        - name: agent
+          # ⬇️ swap to your built image/tag
+          image: 992382448282.dkr.ecr.us-west-2.amazonaws.com/sovereign-ai/live-data-agent:0.2.0
+          imagePullPolicy: Always
+          env:
+            # ── LLM (vLLM/OpenAI-compatible)
+            - name: LLAMA_URL
+              value: "http://llama3-1-8b.esai-sovereign-ai.svc.cluster.local:8000/v1"
+            - name: LLAMA_MODEL
+              value: "meta-llama/Llama-3.1-8B-Instruct"
+            - name: LLAMA_API_KEY
+              value: "dummy"
+
+            # ── Trino/Timescale connection (Coordinator service)
+            - name: TRINO_HOST
+              value: "esai-data-services-trino-trino.esai-data-services.svc.cluster.local"
+            - name: TRINO_PORT
+              value: "8080"
+            - name: TRINO_USER
+              value: "postgres"
+            - name: TRINO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: trino-creds
+                  key: password
+            - name: TRINO_CATALOG
+              value: "timescale"
+            - name: TRINO_SCHEMA
+              value: "public"
+
+            # ── Tool/runtime knobs
+            - name: MAX_ROWS
+              value: "200"
+            - name: LOG_LEVEL
+              value: "INFO"
+
+          ports:
+            - name: http
+              containerPort: 9002
+
+          # Probes (adjust path/port if your app differs)
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 6
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 6
+
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+
+      imagePullSecrets:
+        - name: ecr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: live-data-agent
+  namespace: esai-sovereign-ai
+  labels:
+    app: live-data-agent
+spec:
+  type: ClusterIP
+  selector:
+    app: live-data-agent
+  ports:
+    - name: http
+      port: 9002
+      targetPort: http
+---
+# Optional: Secret stub for Trino password (create or update to match your cred store)
+# kubectl -n esai-sovereign-ai create secret generic trino-creds \
+#   --from-literal=password='<YOUR_TRINO_PASSWORD>'
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trino-creds
+  namespace: esai-sovereign-ai
+type: Opaque
+stringData:
+  password: "<REPLACE_ME>"
